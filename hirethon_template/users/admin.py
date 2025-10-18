@@ -4,7 +4,7 @@ from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model, decorators
 from django.utils.translation import gettext_lazy as _
 
-from hirethon_template.users.forms import UserAdminChangeForm, UserAdminCreationForm
+from hirethon_template.users.forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
 
@@ -16,11 +16,11 @@ if settings.DJANGO_ADMIN_FORCE_ALLAUTH:
 
 @admin.register(User)
 class UserAdmin(auth_admin.UserAdmin):
-    form = UserAdminChangeForm
-    add_form = UserAdminCreationForm
+    form = UserChangeForm
+    add_form = UserCreationForm
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
-        (_("Personal info"), {"fields": ("name",)}),
+        (None, {"fields": ("username", "email", "password")}),
+        (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (
             _("Permissions"),
             {
@@ -33,17 +33,17 @@ class UserAdmin(auth_admin.UserAdmin):
                 ),
             },
         ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Important dates"), {"fields": ("last_login", "date_joined", "created_at", "updated_at")}),
     )
-    list_display = ["email", "name", "is_superuser"]
-    search_fields = ["name"]
+    list_display = ["username", "email", "first_name", "last_name", "is_superuser", "created_at"]
+    search_fields = ["username", "email", "first_name", "last_name"]
     ordering = ["id"]
     add_fieldsets = (
         (
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2"),
+                "fields": ("username", "email", "password1", "password2"),
             },
         ),
     )
